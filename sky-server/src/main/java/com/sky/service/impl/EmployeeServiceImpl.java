@@ -1,27 +1,43 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.sky.annotation.AutoFill;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
+import com.sky.entity.User;
+import com.sky.enumeration.OperationType;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
+    private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
     @Autowired
     private EmployeeMapper employeeMapper;
 
@@ -65,6 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * 新增员工
      */
+    @AutoFill(value = OperationType.INSERT)
     @Override
     public void save(EmployeeDTO employeeDTO) {
 
@@ -77,14 +94,69 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        // employee.setCreateTime(LocalDateTime.now());
+        // employee.setUpdateTime(LocalDateTime.now());
 
-        Long currentId = BaseContext.getCurrentId();
+        // Long currentId = BaseContext.getCurrentId();
 
-        employee.setCreateUser(currentId);
-        employee.setUpdateUser(currentId);
+        // employee.setCreateUser(currentId);
+        // employee.setUpdateUser(currentId);
 
         employeeMapper.insert(employee);
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param employeePageQueryDTO
+     */
+    @Override
+    public PageResult page(EmployeePageQueryDTO employeePageQueryDTO) {
+
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        Page<Employee> page = employeeMapper.getList(employeePageQueryDTO);
+        PageResult pageResult = new PageResult();
+        pageResult.setTotal(page.getTotal());
+        pageResult.setRecords(page.getResult());
+        return pageResult;
+    }
+
+    /**
+     * 设置状态
+     *
+     * @param status
+     * @param id
+     * @return
+     */
+    @Override
+    public int setStatus(Integer status, Long id) {
+
+        Employee employee = Employee.builder().status(status).id(id).build();
+        return employeeMapper.update(employee);
+    }
+    /**
+     * 获取员工信息
+     *
+     * @param id
+     */
+    @Override
+    public Employee getDetails(Long id) {
+        return employeeMapper.getDetails(id);
+    }
+    /**
+     * 编辑员工
+     *
+     * @param employeeDTO
+     * @return
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    @Override
+    public int edit(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+        // employee.setUpdateTime(LocalDateTime.now());
+        // employee.setUpdateUser(BaseContext.getCurrentId());
+        int row = employeeMapper.update(employee);
+        return row;
     }
 }
