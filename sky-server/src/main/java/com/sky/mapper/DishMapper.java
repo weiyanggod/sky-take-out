@@ -64,4 +64,6 @@ public interface DishMapper {
      * @param id
      */
     int setStatus(Integer status, Long id);
+
+    List<Dish> getDishByCategoryId(Long categoryId);
 }

@@ -70,6 +70,13 @@ public class DishController {
         return Result.success(dish);
     }
 
+    @GetMapping("/list")
+    public Result<List<Dish>> getDishByCategoryId(Long categoryId) {
+
+        List<Dish> dishList = dishService.getDishByCategoryId(categoryId);
+        return Result.success(dishList);
+    }
+
     @PutMapping
     @ApiOperation("编辑菜品")
     public Result<String> updateDish(@RequestBody DishDTO dishDTO) {

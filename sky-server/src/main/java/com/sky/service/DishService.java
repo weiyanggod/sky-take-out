@@ -46,4 +46,11 @@ public interface DishService {
      * @param id
      */
     int setStatus(Integer status, Long id);
+
+    /**
+     * 根据分类id查询菜品
+     *
+     * @param categoryId
+     */
+    List<Dish> getDishByCategoryId(Long categoryId);
 }

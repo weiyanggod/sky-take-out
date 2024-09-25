@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealMapper">
+    <insert id="addSetmeal" keyProperty="id" useGeneratedKeys="true">
+        insert into setmeal (category_id, name, price, description, image, create_time, update_time, create_user,
+                             update_user)
+        VALUES (#{categoryId}, #{name}, #{price}, #{description}, #{image}, #{createTime}, #{updateTime}, #{createUser},
+                #{updateUser})
+    </insert>
+    <update id="updateSetmeal">
+        update setmeal
+        set category_id=#{categoryId},
+            name=#{name},
+            price=#{price},
+            description=#{description},
+            image=#{image},
+            update_time=#{updateTime},
+            update_user=#{updateUser}
+        where id = #{id}
+    </update>
+    <update id="updateSetmealStatus">
+        update setmeal
+        set status=#{status}
+        where id = #{id}
+    </update>
+    <delete id="deleteSetmeal">
+        delete from setmeal where id in
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="page" resultType="com.sky.vo.SetmealVO">
+        select * from setmeal
+        <where>
+            <if test="name!=null">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="status!=null">
+                name=#{status}
+            </if>
+            <if test="categoryId!=null">
+                name=#{categoryId}
+            </if>
+        </where>
+    </select>
+    <select id="getSetmealById" resultType="com.sky.vo.SetmealVO">
+        select *
+        from setmeal
+        where id = #{id}
+    </select>
+</mapper>
