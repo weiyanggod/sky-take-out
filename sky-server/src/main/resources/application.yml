@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: sky-take-out
   profiles:
     active: dev
   main:
@@ -12,6 +14,11 @@ spring:
       url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: ${sky.datasource.username}
       password: ${sky.datasource.password}
+  redis:
+    host: ${sky.redis.host}
+    port: ${sky.redis.port}
+    auth: ${sky.redis.auth}
+    database: ${sky.redis.database}
   servlet:
     multipart:
       max-file-size: 10MB

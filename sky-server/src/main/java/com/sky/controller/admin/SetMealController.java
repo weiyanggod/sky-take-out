@@ -62,7 +62,7 @@ public class SetMealController {
      */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询套餐")
-    public Result<SetmealVO> getSetmealById(@PathVariable Integer id) {
+    public Result<SetmealVO> getSetmealById(@PathVariable Integer id, String name) {
         SetmealVO setmealVO = setMealService.getSetmealById(id);
         return Result.success(setmealVO);
     }
@@ -79,7 +79,6 @@ public class SetMealController {
         int row = setMealService.updateSetmeal(setmealDTO);
         if (row != 0) {
             return Result.success("修改成功");
-
         } else {
             return Result.error("修改失败");
         }

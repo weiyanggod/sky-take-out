@@ -33,16 +33,17 @@
 
 
     <select id="page" resultType="com.sky.vo.SetmealVO">
-        select * from setmeal
+        select a.*,b.name categoryName from setmeal a left join category b
+        ON b.id=a.category_id
         <where>
             <if test="name!=null">
-                name like concat('%',#{name},'%')
+                and a.name like concat('%',#{name},'%')
             </if>
             <if test="status!=null">
-                name=#{status}
+                and a.status=#{status}
             </if>
             <if test="categoryId!=null">
-                name=#{categoryId}
+                and a.categoryId=#{categoryId}
             </if>
         </where>
     </select>

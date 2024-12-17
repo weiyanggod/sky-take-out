@@ -11,3 +11,8 @@ sky:
     access-key-id: LTAI5tKbMcUqZgDJuNNRtq8N
     access-key-secret: xM7rqt1GETiUqskTczjgrIx4DjKDRN
     bucket-name: wei-yang
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    auth: 123456
+    database: 0

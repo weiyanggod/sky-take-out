@@ -5,6 +5,7 @@ import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -25,6 +26,9 @@ public class SetMealServiceImpl implements SetmealService {
 
     @Autowired
     SetmealDishMapper setmealDishMapper;
+
+    @Autowired
+    CategoryMapper categoryMapper;
 
     /**
      * 新增套餐
@@ -47,13 +51,19 @@ public class SetMealServiceImpl implements SetmealService {
             return 0;
         }
     }
+
+    /**
+     * 分页查询
+     *
+     * @param setmealPageQueryDTO
+     * @return
+     */
     @Override
     public PageResult page(SetmealPageQueryDTO setmealPageQueryDTO) {
 
         PageHelper.startPage(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
 
         List<SetmealVO> list = setmealMapper.page(setmealPageQueryDTO.getName(), setmealPageQueryDTO.getStatus(), setmealPageQueryDTO.getCategoryId());
-
         PageInfo<SetmealVO> pageInfo = PageInfo.of(list);
 
         return new PageResult(pageInfo.getTotal(), pageInfo.getList());
